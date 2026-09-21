@@ -1,0 +1,30 @@
+services:
+  frontend:
+    image: timothecm/recipes-frontend
+    ports:
+      - 3001:3001
+
+  worker:
+    image: timothecm/recipes-worker
+    deploy:
+      replicas: 1 # TODO replace by 3 for real tests
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_DB: recipes
+      POSTGRES_USER: recipes
+      POSTGRES_PASSWORD: mysecretpassword # TODO change the password 
+
+  db:
+    image: postgres:18
+    container_name: postgres
+    environment:
+      POSTGRES_DB: recipes
+      POSTGRES_USER: recipes
+      POSTGRES_PASSWORD: mysecretpassword # TODO change the password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+volumes:
+  postgres_data:

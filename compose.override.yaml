@@ -1,0 +1,17 @@
+services:
+  frontend:
+    build: ./frontend
+    command: npm run dev
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      DEBUG: "frontend:*"
+
+  worker:
+    build: ./worker
+    command: fastapi dev app/main.py --host 0.0.0.0 --port 80
+    volumes:
+      - ./worker/app:/code/app
+    ports:
+      - 8000-8009:80
