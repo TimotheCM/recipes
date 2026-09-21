@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# How to use this script:
+# ./script/download_recipes_dataset
+set -euo pipefail
+
+# This is the url of the dataset we are using
+URL="https://eightportions.com/recipes_raw.zip"
+
+# Path of the data folder and the zip file
+DATA_DIR="$(dirname "$0")/../data"
+ZIP="$DATA_DIR/recipes_raw.zip"
+
+mkdir -p "$DATA_DIR"
+
+echo "Downloading $URL ..."
+curl -fL --progress-bar -o "$ZIP" "$URL"
+
+echo "Extraction of JSON ..."
+unzip -o -j "$ZIP" '*.json' -d "$DATA_DIR"
+
+rm "$ZIP"
+ls -lh "$DATA_DIR"
