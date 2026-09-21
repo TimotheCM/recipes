@@ -2,4 +2,11 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  p Welcome to #{title} !
+    p Run out of recipe ideas ? Want to try a new one ? 
+    p Type any recipe name, or whatever you've got in your fridge !
+    
+    // Form that sends a GET request to /search route
+    form(action = "/search", method = "GET")
+      input(type = "text", name = "q", placeholder = "e.g.: Pasta, spinnach...")
+      button(type="submit") Search 

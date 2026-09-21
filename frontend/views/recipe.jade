@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1= recipe.name
+
+  h3 Ingredients
+  p(style="white-space: pre-line")= recipe.ingredients
+
+  h3 Instructions
+  p= recipe.instruction
+
+  a(href="/search") ← Back to results for "#{query}"

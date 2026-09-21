@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  h1 Results for "#{query}"
+
+  if results.length > 0
+    ul
+      each recipe in results
+        li
+          a(href="/recipe/" + recipe.id)= recipe.name
+  else
+    p Aucun résultat trouvé.
+
+  p
+    a(href="/") ← Retour à l'accueil
