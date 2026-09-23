@@ -2,6 +2,8 @@
 
 A recipe search website. An Express frontend sends each search to several FastAPI workers in parallel, which look for matching recipes in a PostgreSQL database.
 
+We use the recipi dataset from https://eightportions.com/datasets/Recipes/#fn:1
+
 # Production
 
 Build the images and push them to Docker Hub:
