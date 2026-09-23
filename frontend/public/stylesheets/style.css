@@ -1,13 +1,128 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
-
-a {
-  color: #00B7FF;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0 48px;
+  box-sizing: border-box;
+  background: #f7f7f7;
+  color: #222;
 }
 
 .ingredients-text {
   white-space: pre-line;
 }
 
+.instructions-text {
+  white-space: pre-line;
+  display: block;
+  margin: 10px 0 18px;
+  line-height: 1.9;
+}
+
+.ingredients-list,
+.instructions-list {
+  margin-top: 16px;
+  margin-bottom: 28px;
+  padding-left: 24px;
+}
+
+.ingredients-item,
+.instructions-item {
+  margin-bottom: 16px;
+  line-height: 1.8;
+}
+
+a {
+  color: #2f7d32;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.container {
+  max-width: 900px;
+  width: calc(100% - 64px);
+  margin: 40px auto;
+  padding: 24px 36px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  body {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .container {
+    width: calc(100% - 40px);
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}
+
+h1 {
+  color: #1d4d1d;
+  margin-bottom: 20px;
+}
+
+p {
+  line-height: 1.6;
+}
+
+form {
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+input[type="text"] {
+  flex: 1;
+  min-width: 220px;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #2f7d32;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background: #255f28;
+}
+
+ul {
+  padding-left: 20px;
+}
+
+li {
+  margin: 8px 0;
+}
+
+.error {
+  color: #b00020;
+  font-weight: bold;
+}
+
+nav {
+  background: #1d4d1d;
+  color: white;
+  padding: 15px 20px;
+}
+
+nav a {
+  color: white;
+  margin-right: 15px;
+}

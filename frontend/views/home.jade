@@ -2,21 +2,21 @@ extends layout
 
 block content
   h1 Recipe Finder
-  p Welcome to Recipe Finder !
-    p Run out of recipe ideas ? Want to try a new one ? 
-    p Type any recipe name, or whatever you've got in your fridge !
-    
-    // Form that sends a GET request to /search route
-    form(action = "/search", method = "GET")
-      input(type = "text", name = "q", placeholder = "e.g.: Pasta, spinnach...")
-      button(type="submit") Search 
+  h1 Welcom to Recipe Finder !
+  h3 Run out of recipe ideas ? Want to try a new one ? 
+  h3 Type any recipe name, or whatever you've got in your fridge !
+  
+  // Form that sends a GET request to /search route
+  form(action = "/search", method = "GET")
+    input(type = "text", name = "q", placeholder = "e.g.: Pasta, spinnach...")
+    button(type="submit") Search 
 
 
-    p A few ideas to start 
-    ul
-      each recipe in home_recipes 
-        li
-          a(href="/recipe/" + recipe.title, target="_blank", rel="noopener noreferrer")= recipe.title 
-          
+  p A few ideas to start:  
+  ul
+    each recipe in home_recipes 
+      li
+        a(href="/recipe/" + recipe.title, target="_blank", rel="noopener noreferrer")= recipe.title 
+        
           
  

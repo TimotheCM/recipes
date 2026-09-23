@@ -4,12 +4,14 @@ block content
   h1= recipe.title
 
   h3 Ingredients
-  each ingredient in recipe.ingredients
-    li= ingredient
+  ul
+    each ingredient in recipe.ingredients
+      li= ingredient
 
   h3 Instructions
   ol
     each instruction in recipe.instructions.split(/\r?\n/)
-      if instruction.trim() !== ''
-        li= line
+      if instruction.trim() !== '' 
+        li
+            span.instructions-text= instruction
 

@@ -1,64 +1,95 @@
 var express = require('express');
 var router = express.Router();
 
-
-
 /* GET home page. */
 router.get('/', async function(req, res, next) {
-  //Print 100 recipes on home page
-  console.log("Loading recipes for home page");
+  console.log('Loading recipes for home page');
+
   try {
-    // Get the recipes to show from the API 
-    const response = await fetch('http://worker:80/recipes/?offset=0&limit=100', {
+    const response = await fetch('http://worker:80/recipes?offset=0&limit=100', {
       method: 'GET',
       headers: {
-        'accept': '*/*'
+        accept: '*/*'
       }
     });
-    console.log(response)
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
     const recipes = await response.json();
-    console.log(recipes)
+    const homeRecipes = Array.isArray(recipes) ? recipes : [];
 
-    // Send the recipes to home view
-    res.render('home', { home_recipes: recipes });
-
+    res.render('home', { home_recipes: homeRecipes, error: null });
   } catch (error) {
-    console.error("Error: could not load the recipes", error);
-    res.render('home', { home_recipes: [], error: "Cannot communicate with API" });
+    console.error('Error: could not load the recipes', error);
+    res.render('home', { home_recipes: [], error: 'Cannot communicate with API' });
   }
 });
-
-
-
 
 /* GET search page. */
 router.get('/search', async function(req, res, next) {
-  const query = req.query.q || '';
+  const query = String(req.query.q || '').trim();
+
+  if (!query) {
+    return res.redirect('/');
+  }
 
   try {
-    const response = await fetch(`http://worker:80/recipes?offset=0&limit=100`);
-    const allRecipes = await response.json();
+    const response = await fetch('http://worker:80/recipes?offset=0&limit=100', {
+      method: 'GET',
+      headers: {
+        accept: '*/*'
+      }
+    });
 
-    const results = allRecipes.filter(recipe => {
-      if (!query) return false;
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const allRecipes = await response.json();
+    const recipes = Array.isArray(allRecipes) ? allRecipes : [];
+
+    const results = recipes.filter((recipe) => {
+      if (!recipe || !recipe.title) return false;
       return recipe.title.toLowerCase().includes(query.toLowerCase());
     });
 
-    res.render('search', { query, results });
+    res.render('search', { query, results, error: null });
   } catch (error) {
     console.error(error);
-    res.render('search', { query, results: [] });
+    res.render('search', { query, results: [], error: 'Cannot communicate with API' });
   }
-})
-
+});
 
 /* GET recipe page (by title). */
 router.get('/recipe/:title', async function(req, res, next) {
-  const title = req.params.title;
-  const response = await fetch(`http://worker:80/recipes/${encodeURIComponent(title)}`);
-  const recipe = await response.json();
-  res.render('recipe', { recipe });
+  const title = decodeURIComponent(req.params.title || '');
+
+  if (!title) {
+    return res.redirect('/');
+  }
+
+  try {
+    const response = await fetch(`http://worker:80/recipes/${encodeURIComponent(title)}`, {
+      method: 'GET',
+      headers: {
+        accept: '*/*'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const recipe = await response.json();
+    res.render('recipe', { recipe, error: null });
+  } catch (error) {
+    console.error(error);
+    res.render('recipe', { recipe: null, error: 'Recipe not found' });
+  }
 });
+
 module.exports = router;
 
 
