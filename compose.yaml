@@ -3,11 +3,17 @@ services:
     image: timothecm/recipes-frontend
     ports:
       - 3001:3001
+    environment:
+      WORKER_URL: http://worker:80
+      SHARDS: 12
 
   worker:
     image: timothecm/recipes-worker
     deploy:
-      replicas: 1 # TODO replace by 3 for real tests
+      replicas: 3
+      resources:
+        limits:
+          cpus: "1"
     environment:
       POSTGRES_HOST: db
       POSTGRES_DB: recipes

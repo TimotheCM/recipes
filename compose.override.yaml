@@ -17,4 +17,4 @@ services:
     volumes:
       - ./worker/app:/code/app
     ports:
-      - 8000-8009:80
+      - 8000-8002:80
