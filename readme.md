@@ -26,14 +26,8 @@ docker compose -f compose.yaml down
 ```
 
 
+
 # Development
-
-## Script for download the recipes dataset
-Download the recipes dataset into the `data` folder:
-
-```bash
-./script/download_recipes_dataset
-```
 
 ## Local dev with Docker Compose
 

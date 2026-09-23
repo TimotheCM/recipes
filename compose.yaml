@@ -12,7 +12,19 @@ services:
       POSTGRES_HOST: db
       POSTGRES_DB: recipes
       POSTGRES_USER: recipes
-      POSTGRES_PASSWORD: mysecretpassword # TODO change the password 
+      POSTGRES_PASSWORD: mysecretpassword #TODO change the password 
+
+  importer:
+    image: timothecm/recipes-importer
+    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_DB: recipes
+      POSTGRES_USER: recipes
+      POSTGRES_PASSWORD: mysecretpassword #TODO change the password
 
   db:
     image: postgres:18
@@ -20,11 +32,16 @@ services:
     environment:
       POSTGRES_DB: recipes
       POSTGRES_USER: recipes
-      POSTGRES_PASSWORD: mysecretpassword # TODO change the password
+      POSTGRES_PASSWORD: mysecretpassword #TODO change the password
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 volumes:
   postgres_data:
