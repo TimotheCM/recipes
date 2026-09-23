@@ -1,12 +1,17 @@
 var express = require('express');
 var router = express.Router();
 
+const WORKER_URL = process.env.WORKER_URL;
+const SHARDS = Number(process.env.SHARDS);
+
+
 /* GET home page. */
 router.get('/', async function(req, res, next) {
   console.log('Loading recipes for home page');
 
   try {
-    const response = await fetch('http://worker:80/recipes?offset=0&limit=100', {
+    // Get the recipes to show from the API 
+    const response = await fetch(`${WORKER_URL}/recipes/?offset=0&limit=100`, {
       method: 'GET',
       headers: {
         accept: '*/*'
@@ -36,24 +41,17 @@ router.get('/search', async function(req, res, next) {
   }
 
   try {
-    const response = await fetch('http://worker:80/recipes?offset=0&limit=100', {
-      method: 'GET',
-      headers: {
-        accept: '*/*'
-      }
-    });
+    const answers = await Promise.all(
+      Array.from({ length: SHARDS }, (_, shard) =>
+        fetch(`${WORKER_URL}/search?q=${encodeURIComponent(query)}&shard=${shard}&shards=${SHARDS}`)
+          .then(response => response.json())
+      )
+    );
 
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
-    }
-
-    const allRecipes = await response.json();
-    const recipes = Array.isArray(allRecipes) ? allRecipes : [];
-
-    const results = recipes.filter((recipe) => {
-      if (!recipe || !recipe.title) return false;
-      return recipe.title.toLowerCase().includes(query.toLowerCase());
-    });
+    const results = answers
+      .flatMap(answer => answer.results)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 100);
 
     res.render('search', { query, results, error: null });
   } catch (error) {
@@ -64,14 +62,15 @@ router.get('/search', async function(req, res, next) {
 
 /* GET recipe page (by title). */
 router.get('/recipe/:title', async function(req, res, next) {
-  const title = decodeURIComponent(req.params.title || '');
+  // express already decodes the url, decoding again breaks the "100% ..." titles
+  const title = req.params.title;
 
   if (!title) {
     return res.redirect('/');
   }
 
   try {
-    const response = await fetch(`http://worker:80/recipes/${encodeURIComponent(title)}`, {
+    const response = await fetch(`${WORKER_URL}/recipes/${encodeURIComponent(title)}`, {
       method: 'GET',
       headers: {
         accept: '*/*'
