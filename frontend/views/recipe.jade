@@ -1,12 +1,15 @@
 extends layout
 
 block content
-  h1= recipe.name
+  h1= recipe.title
 
   h3 Ingredients
-  p(style="white-space: pre-line")= recipe.ingredients
+  each ingredient in recipe.ingredients
+    li= ingredient
 
   h3 Instructions
-  p= recipe.instruction
+  ol
+    each instruction in recipe.instructions.split(/\r?\n/)
+      if instruction.trim() !== ''
+        li= line
 
-  a(href="/search") ← Back to results for "#{query}"

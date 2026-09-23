@@ -22,6 +22,12 @@ def create_recipe(recipe: RecipeBase, session: SessionDep) -> Recipe:
     return db_recipe
 
 
+
+@app.get("/test/")
+def qsdqsdqsd():
+    return "hello ozrddd"
+
+
 @app.get("/recipes/")
 def read_recipes(
     session: SessionDep,

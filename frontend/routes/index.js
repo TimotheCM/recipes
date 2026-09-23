@@ -1,63 +1,63 @@
 var express = require('express');
 var router = express.Router();
 
+
+
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('home', { title: 'Recipe Finder' });
+router.get('/', async function(req, res, next) {
+  //Print 100 recipes on home page
+  console.log("Loading recipes for home page");
+  try {
+    // Get the recipes to show from the API 
+    const response = await fetch('http://worker:80/recipes/?offset=0&limit=100', {
+      method: 'GET',
+      headers: {
+        'accept': '*/*'
+      }
+    });
+    console.log(response)
+    const recipes = await response.json();
+    console.log(recipes)
+
+    // Send the recipes to home view
+    res.render('home', { home_recipes: recipes });
+
+  } catch (error) {
+    console.error("Error: could not load the recipes", error);
+    res.render('home', { home_recipes: [], error: "Cannot communicate with API" });
+  }
 });
 
 
+
+
 /* GET search page. */
-router.get('/search', function(req, res, next) {
+router.get('/search', async function(req, res, next) {
+  const query = req.query.q || '';
 
-  // Store the keys words written by the user in the search bar
-  const query = req.query.q; 
+  try {
+    const response = await fetch(`http://worker:80/recipes?offset=0&limit=100`);
+    const allRecipes = await response.json();
 
-  // Get all the recipes from data base
-  const recipes = [
-    {id:1, name: 'Lasagna', ingredients: '2 tomatoes /n 20cl of cream', instruction: 'cook the tomatos'},
-    {id:2, name: 'Pizza', ingredients: '200g of flour /n 100g of cheese', instruction: 'mix the flour...'},
-    {id:3, name: 'French fries', ingredients: '5 potatoes /n salt', instruction: 'cut the potatoes'},
-  ];
+    const results = allRecipes.filter(recipe => {
+      if (!query) return false;
+      return recipe.title.toLowerCase().includes(query.toLowerCase());
+    });
 
-  // Filter the results matching the key words
-  const results = recipes.filter(recipe => {
-    if (!query) return false;
-    
-    const q = query.toLowerCase();
-    const name = recipe.name.toLowerCase();
-    const ingredients = recipe.ingredients.toLowerCase();
-
-
-    // Returns true if one contains the other
-    return name.includes(q) || q.includes(name) || ingredients.includes(q); 
-
-  });
-
-  //Sends the matching results to search.jade view
-  res.render('search', { query: query, results: results });
+    res.render('search', { query, results });
+  } catch (error) {
+    console.error(error);
+    res.render('search', { query, results: [] });
+  }
 })
 
 
-/* GET recipe page (by ID). */
-router.get('/recipe/:id', function(req, res, next) {
-  const recipeId = parseInt(req.params.id);
-
-  // Get all the recipes from data base
-  const recipes = [
-    {id:1, name: 'Lasagna', ingredients: '2 tomatoes \n 20cl of cream', instruction: 'cook the tomatos'},
-    {id:2, name: 'Pizza', ingredients: '200g of flour \n 100g of cheese', instruction: 'mix the flour...'},
-    {id:3, name: 'French fries', ingredients: '5 potatoes \n salt', instruction: 'cut the potatoes'}
-  ];
-
-// Find the recipe matching ID
-  const recipe = recipes.find(r => r.id === recipeId);
-
- // Error: if non existing recipe id
-  if (!recipe) {
-    return res.status(404).send("Error: Cannot find recipe");
-  }
-  res.render('recipe', { recipe: recipe });
+/* GET recipe page (by title). */
+router.get('/recipe/:title', async function(req, res, next) {
+  const title = req.params.title;
+  const response = await fetch(`http://worker:80/recipes/${encodeURIComponent(title)}`);
+  const recipe = await response.json();
+  res.render('recipe', { recipe });
 });
 module.exports = router;
 

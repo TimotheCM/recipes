@@ -3,13 +3,13 @@ extends layout
 block content
   h1 Results for "#{query}"
 
-  if results.length > 0
+  if results && results.length > 0
     ul
       each recipe in results
         li
-          a(href="/recipe/" + recipe.id)= recipe.name
+          a(href="/recipe/" + recipe.title, target="_blank", rel="noopener noreferrer")= recipe.title
   else
     p Aucun résultat trouvé.
 
   p
-    a(href="/") ← Retour à l'accueil
+    a(href="/") ← Back to home page
