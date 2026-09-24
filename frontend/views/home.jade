@@ -2,13 +2,13 @@ extends layout
 
 block content
   h1 Recipe Finder
-  h1 Welcom to Recipe Finder !
-  h3 Run out of recipe ideas ? Want to try a new one ? 
-  h3 Type any recipe name, or whatever you've got in your fridge !
+  h2 Welcome to Recipe Finder!
+  h3 Run out of recipe ideas? Want to try a new one?
+  h3 Type any recipe name, or whatever you've got in your fridge!
   
   // Form that sends a GET request to /search route
   form(action = "/search", method = "GET")
-    input(type = "text", name = "q", placeholder = "e.g.: Pasta, spinnach...")
+    input(type = "text", name = "q", placeholder = "e.g.: Pasta, spinach...")
     button(type="submit") Search 
 
 
