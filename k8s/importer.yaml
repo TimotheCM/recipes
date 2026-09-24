@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: importer
+spec:
+  backoffLimit: 4
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: importer
+          image: timothecm/recipes-importer
+          envFrom:
+            - configMapRef:
+                name: recipes-config
+            - secretRef:
+                name: recipes-secret

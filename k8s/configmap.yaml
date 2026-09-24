@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: recipes-config
+data:
+  POSTGRES_HOST: db
+  POSTGRES_DB: recipes
+  POSTGRES_USER: recipes
+  WORKER_URL: http://worker:80
+  SHARDS: "12"
