@@ -1,8 +1,13 @@
-# Recipes
+# Description of the software
 
-A recipe search website. An Express frontend sends each search to several FastAPI workers in parallel, which look for matching recipes in a PostgreSQL database.
+The software is already deployed on:
+https://recipe-finder.timothecormier.fr/
 
-We use the recipi dataset from https://eightportions.com/datasets/Recipes/#fn:1
+
+Recipe Finder is a recipe search website. By simply writing a recipe or an ingredient name in the search bar, the website searches a database of 120 000 recipes, so you have plenty of choices for your meal!
+An Express frontend sends each search to several FastAPI workers in parallel, which look for matching recipes in a PostgreSQL database.
+
+It uses the recipe dataset from https://eightportions.com/datasets/Recipes/#fn:1
 
 # Production
 
@@ -12,6 +17,29 @@ docker login
 docker compose build
 docker compose push
 ```
+
+## With Kubernetes
+
+```bash
+cp k8s/secret.example.yaml k8s/secret.yaml
+```
+
+Deploy:
+```bash
+kubectl apply -f k8s/
+```
+
+Then open with
+```
+minikube service frontend
+```
+
+
+To remove everything:
+```bash
+kubectl delete -f k8s/
+```
+
 
 ## With Docker Compose
 
@@ -68,7 +96,5 @@ https://www.conventionalcommits.org/en/v1.0.0/
 https://expressjs.com/en/5x/starter/installing/
 
 https://fastapi.tiangolo.com/#create-it
-
-https://socket.io/docs/v4/tutorial/introduction
 
 https://docs.docker.com/guides/postgresql/
